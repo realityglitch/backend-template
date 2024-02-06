@@ -44,3 +44,18 @@ export class CreateUserInput {
   @Field()
   password: string;
 }
+
+@ObjectType()
+export class LoginReturn {
+  @Field()
+  token: string;
+}
+
+@InputType()
+export class LoginInput {
+  @Field()
+  email: string;
+
+  @Field()
+  password: string;
+}

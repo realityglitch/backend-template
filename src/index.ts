@@ -10,7 +10,9 @@ const startServer = async () => {
       const graphqlServer = new GraphQLServer();
 
       graphqlServer.start((port) => {
-        console.log(`Server started on port ${port}`);
+        console.log(
+          `Server started on port ${port}: http://localhost:${port}/graphql`
+        );
       });
     })
     .catch((error) => {

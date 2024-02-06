@@ -1,7 +1,13 @@
 import { Arg, Args, Authorized, Mutation, Query, Resolver } from "type-graphql";
-import { CreateUserInput, EnterpriseUserType } from "./SDL/user";
+import {
+  CreateUserInput,
+  EnterpriseUserType,
+  LoginInput,
+  LoginReturn,
+} from "./SDL/user";
 import { EnterpriseUser } from "../../entity/enterprise-user";
 import bcrypt from "bcrypt";
+import JwtService from "../../services/auth/jwt";
 
 @Resolver(EnterpriseUserType)
 export class UserResolver {
@@ -33,5 +39,29 @@ export class UserResolver {
       console.log(e);
       return false;
     }
+  }
+
+  @Authorized()
+  @Mutation(() => LoginReturn)
+  async login(@Arg("input") input: LoginInput) {
+    const user = await EnterpriseUser.findOne({
+      where: { email: input.email },
+    });
+    if (!user) {
+      throw new Error("Invalid email or password");
+    }
+    const valid = await bcrypt.compare(input.password, user.password);
+    if (!valid) {
+      throw new Error("Invalid email or password");
+    }
+    const jwt = new JwtService();
+    const token = await jwt.sign({
+      email: user.email,
+      id: user.id,
+      isActive: user.isActive,
+    });
+    return {
+      token,
+    };
   }
 }

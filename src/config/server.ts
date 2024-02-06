@@ -32,9 +32,13 @@ export class GraphQLServer {
       resolvers: Resolvers,
       validate: false,
       authChecker: customAuthChecker,
+      // emitSchemaFile: {
+      //   path: __dirname + "/schema.graphql",
+      //   sortedSchema: false,
+      // },
     });
 
-    this.server = new ApolloServer({ schema });
+    this.server = new ApolloServer({ schema, context: ({ req }) => ({ req }) });
     // Move this port to a configuration file
     const expressInstance = new Server(Number(process.env?.PORT) || 3010);
     const server = expressInstance.getExpress();
