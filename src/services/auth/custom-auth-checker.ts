@@ -25,7 +25,9 @@ export const customAuthChecker: AuthChecker = async (
   const jwt = new JwtService();
 
   try {
-    await jwt.verify(token);
+    const user = await jwt.verify(token);
+
+    context.req["user"] = user.data;
     // if (roles.length === 0) {
     //   return user;
     // }

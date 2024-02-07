@@ -7,7 +7,7 @@ import {
   JoinColumn,
   BaseEntity,
 } from "typeorm";
-import { EnterpriseUserLogs } from "./enterprise-user-logs";
+// import { EnterpriseUserLogs } from "./enterprise-user-logs";
 
 @Entity()
 export class PbmClients extends BaseEntity {

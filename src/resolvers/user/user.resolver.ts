@@ -1,4 +1,12 @@
-import { Arg, Args, Authorized, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Args,
+  Authorized,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+} from "type-graphql";
 import {
   CreateUserInput,
   EnterpriseUserType,
@@ -8,6 +16,7 @@ import {
 import { EnterpriseUser } from "../../entity/enterprise-user";
 import bcrypt from "bcrypt";
 import JwtService from "../../services/auth/jwt";
+import { EnterpriseUserLogs } from "../../entity/enterprise-user-logs";
 
 @Resolver(EnterpriseUserType)
 export class UserResolver {
@@ -41,9 +50,8 @@ export class UserResolver {
     }
   }
 
-  @Authorized()
   @Mutation(() => LoginReturn)
-  async login(@Arg("input") input: LoginInput) {
+  async login(@Ctx() ctx, @Arg("input") input: LoginInput) {
     const user = await EnterpriseUser.findOne({
       where: { email: input.email },
     });
@@ -55,6 +63,13 @@ export class UserResolver {
       throw new Error("Invalid email or password");
     }
     const jwt = new JwtService();
+    const userLog = new EnterpriseUserLogs();
+
+    userLog.userId = user.id;
+    userLog.loginTime = new Date();
+    userLog.ipAddress = ctx.req.ip || ctx.req.connection.remoteAddress;
+
+    await userLog.save();
     const token = await jwt.sign({
       email: user.email,
       id: user.id,
@@ -63,5 +78,18 @@ export class UserResolver {
     return {
       token,
     };
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async logout(@Ctx() ctx) {
+    const userLog = await EnterpriseUserLogs.findOne({
+      where: { userId: ctx.req.user.id },
+      order: { loginTime: "DESC" },
+    });
+
+    userLog.logoutTime = new Date();
+    await userLog.save();
+    return true;
   }
 }
