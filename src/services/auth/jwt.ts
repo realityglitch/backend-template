@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 export default class JwtService {
   private readonly secret: string = process.env.JWT_SECRET;
@@ -14,7 +14,7 @@ export default class JwtService {
         data: payload,
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
       },
-      this.secret
+      this.secret,
     );
 
     return token;

@@ -5,8 +5,8 @@ import {
   CreateDateColumn,
   ManyToOne,
   BaseEntity,
-} from "typeorm";
-import { EnterpriseUser } from "./enterprise-user";
+} from 'typeorm';
+import { EnterpriseUser } from './enterprise-user';
 
 @Entity()
 export class EnterpriseUserLogs extends BaseEntity {

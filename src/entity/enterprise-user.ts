@@ -6,8 +6,8 @@ import {
   OneToMany,
   JoinColumn,
   BaseEntity,
-} from "typeorm";
-import { EnterpriseUserLogs } from "./enterprise-user-logs";
+} from 'typeorm';
+import { EnterpriseUserLogs } from './enterprise-user-logs';
 
 @Entity()
 export class EnterpriseUser extends BaseEntity {

@@ -1,6 +1,6 @@
-import { Request } from "express";
-import { AuthChecker } from "type-graphql";
-import JwtService from "./jwt";
+import { Request } from 'express';
+import { AuthChecker } from 'type-graphql';
+import JwtService from './jwt';
 
 export const customAuthChecker: AuthChecker = async (
   {
@@ -16,10 +16,10 @@ export const customAuthChecker: AuthChecker = async (
       req: Request;
     };
   },
-  roles
+  roles,
 ) => {
   const token = context.req.headers?.authorization
-    ? context.req.headers.authorization.split(" ")[1]
+    ? context.req.headers.authorization.split(' ')[1]
     : null;
   if (!token) return false;
   const jwt = new JwtService();
@@ -27,7 +27,7 @@ export const customAuthChecker: AuthChecker = async (
   try {
     const user = await jwt.verify(token);
 
-    context.req["user"] = user.data;
+    context.req['user'] = user.data;
     // if (roles.length === 0) {
     //   return user;
     // }

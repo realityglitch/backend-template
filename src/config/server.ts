@@ -1,8 +1,8 @@
-import express from "express";
-import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import Resolvers from "../resolvers";
-import { customAuthChecker } from "../services/auth/custom-auth-checker";
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import { buildSchema } from 'type-graphql';
+import Resolvers from '../resolvers';
+import { customAuthChecker } from '../services/auth/custom-auth-checker';
 
 export default class Server {
   public app: express.Application;
@@ -43,7 +43,7 @@ export class GraphQLServer {
     const expressInstance = new Server(Number(process.env?.PORT) || 3010);
     const server = expressInstance.getExpress();
     await this.server.start();
-    this.server.applyMiddleware({ app: server, path: "/graphql" });
+    this.server.applyMiddleware({ app: server, path: '/graphql' });
 
     expressInstance.start(() => {
       callback(process.env?.PORT ? Number(process.env.PORT) : 3010);

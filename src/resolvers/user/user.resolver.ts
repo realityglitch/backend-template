@@ -6,28 +6,28 @@ import {
   Mutation,
   Query,
   Resolver,
-} from "type-graphql";
+} from 'type-graphql';
 import {
   CreateUserInput,
   EnterpriseUserType,
   LoginInput,
   LoginReturn,
-} from "./SDL/user";
-import { EnterpriseUser } from "../../entity/enterprise-user";
-import bcrypt from "bcrypt";
-import JwtService from "../../services/auth/jwt";
-import { EnterpriseUserLogs } from "../../entity/enterprise-user-logs";
+} from './SDL/user';
+import { EnterpriseUser } from '../../entity/enterprise-user';
+import bcrypt from 'bcrypt';
+import JwtService from '../../services/auth/jwt';
+import { EnterpriseUserLogs } from '../../entity/enterprise-user-logs';
 
 @Resolver(EnterpriseUserType)
 export class UserResolver {
   @Query(() => String)
   async hello() {
-    return "Hello World";
+    return 'Hello World';
   }
 
   @Authorized()
   @Mutation(() => Boolean)
-  async createUser(@Arg("input") input: CreateUserInput) {
+  async createUser(@Arg('input') input: CreateUserInput) {
     try {
       console.log(input);
       const user = new EnterpriseUser();
@@ -51,16 +51,16 @@ export class UserResolver {
   }
 
   @Mutation(() => LoginReturn)
-  async login(@Ctx() ctx, @Arg("input") input: LoginInput) {
+  async login(@Ctx() ctx, @Arg('input') input: LoginInput) {
     const user = await EnterpriseUser.findOne({
       where: { email: input.email },
     });
     if (!user) {
-      throw new Error("Invalid email or password");
+      throw new Error('Invalid email or password');
     }
     const valid = await bcrypt.compare(input.password, user.password);
     if (!valid) {
-      throw new Error("Invalid email or password");
+      throw new Error('Invalid email or password');
     }
     const jwt = new JwtService();
     const userLog = new EnterpriseUserLogs();
@@ -85,7 +85,7 @@ export class UserResolver {
   async logout(@Ctx() ctx) {
     const userLog = await EnterpriseUserLogs.findOne({
       where: { userId: ctx.req.user.id },
-      order: { loginTime: "DESC" },
+      order: { loginTime: 'DESC' },
     });
 
     userLog.logoutTime = new Date();

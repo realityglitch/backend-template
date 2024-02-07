@@ -1,8 +1,8 @@
-import "reflect-metadata";
-import "dotenv/config";
+import 'reflect-metadata';
+import 'dotenv/config';
 
-import { GraphQLServer } from "./config/server";
-import { AppDataSource } from "./data-source";
+import { GraphQLServer } from './config/server';
+import { AppDataSource } from './data-source';
 
 const startServer = async () => {
   AppDataSource.initialize()
@@ -11,7 +11,7 @@ const startServer = async () => {
 
       graphqlServer.start((port) => {
         console.log(
-          `Server started on port ${port}: http://localhost:${port}/graphql`
+          `Server started on port ${port}: http://localhost:${port}/graphql`,
         );
       });
     })
